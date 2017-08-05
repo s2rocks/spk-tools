@@ -27,6 +27,7 @@
 #include <sys/stat.h>
 #include <sys/mount.h>
 #include <sys/statvfs.h>
+#include <sys/sysmacros.h>
 #include <linux/magic.h>
 
 #include "apk_defines.h"
@@ -49,26 +50,26 @@ enum {
 int apk_verbosity = 1;
 unsigned int apk_flags = 0;
 
-static apk_blob_t tmpprefix = { .len=8, .ptr = ".apknew." };
+static apk_blob_t tmpprefix = { .len=8, .ptr = ".spknew." };
 
-static const char * const apkindex_tar_gz = "APKINDEX.tar.gz";
+static const char * const apkindex_tar_gz = "SPKINDEX.tar.gz";
 
-static const char * const apk_static_cache_dir = "var/cache/apk";
+static const char * const apk_static_cache_dir = "var/cache/spk";
 
-static const char * const apk_world_file = "etc/apk/world";
-static const char * const apk_world_file_tmp = "etc/apk/world.new";
-static const char * const apk_arch_file = "etc/apk/arch";
+static const char * const apk_world_file = "etc/spk/world";
+static const char * const apk_world_file_tmp = "etc/spk/world.new";
+static const char * const apk_arch_file = "etc/spk/arch";
 
-static const char * const apk_lock_file = "lib/apk/db/lock";
+static const char * const apk_lock_file = "lib/spk/db/lock";
 
-static const char * const apk_scripts_file = "lib/apk/db/scripts.tar";
-static const char * const apk_scripts_file_tmp = "lib/apk/db/scripts.tar.new";
+static const char * const apk_scripts_file = "lib/spk/db/scripts.tar";
+static const char * const apk_scripts_file_tmp = "lib/spk/db/scripts.tar.new";
 
-static const char * const apk_triggers_file = "lib/apk/db/triggers";
-static const char * const apk_triggers_file_tmp = "lib/apk/db/triggers.new";
+static const char * const apk_triggers_file = "lib/spk/db/triggers";
+static const char * const apk_triggers_file_tmp = "lib/spk/db/triggers.new";
 
-const char * const apk_installed_file = "lib/apk/db/installed";
-static const char * const apk_installed_file_tmp = "lib/apk/db/installed.new";
+const char * const apk_installed_file = "lib/spk/db/installed";
+static const char * const apk_installed_file_tmp = "lib/spk/db/installed.new";
 
 static struct apk_db_acl *apk_default_acl_dir, *apk_default_acl_file;
 
@@ -554,7 +555,7 @@ static int apk_pkg_format_cache_pkg(apk_blob_t to, struct apk_package *pkg)
 	apk_blob_push_blob(&to, APK_BLOB_STR("."));
 	apk_blob_push_hexdump(&to, APK_BLOB_PTR_LEN((char *) pkg->csum.data,
 						    APK_CACHE_CSUM_BYTES));
-	apk_blob_push_blob(&to, APK_BLOB_STR(".apk"));
+	apk_blob_push_blob(&to, APK_BLOB_STR(".spk"));
 	apk_blob_push_blob(&to, APK_BLOB_PTR_LEN("", 1));
 	if (APK_BLOB_IS_NULL(to))
 		return -ENOBUFS;
@@ -564,7 +565,7 @@ static int apk_pkg_format_cache_pkg(apk_blob_t to, struct apk_package *pkg)
 int apk_repo_format_cache_index(apk_blob_t to, struct apk_repository *repo)
 {
 	/* APKINDEX.12345678.tar.gz */
-	apk_blob_push_blob(&to, APK_BLOB_STR("APKINDEX."));
+	apk_blob_push_blob(&to, APK_BLOB_STR("SPKINDEX."));
 	apk_blob_push_hexdump(&to, APK_BLOB_PTR_LEN((char *) repo->csum.data, APK_CACHE_CSUM_BYTES));
 	apk_blob_push_blob(&to, APK_BLOB_STR(".tar.gz"));
 	apk_blob_push_blob(&to, APK_BLOB_PTR_LEN("", 1));
@@ -881,7 +882,7 @@ int apk_db_index_read(struct apk_database *db, struct apk_bstream *bs, int repo)
 	return 0;
 old_apk_tools:
 	/* Installed db should not have unsupported fields */
-	apk_error("This apk-tools is too old to handle installed packages");
+	apk_error("This spk-tools is too old to handle installed packages");
 	return -1;
 bad_entry:
 	apk_error("FDB format error (line %d, entry '%c')", lineno, field);
@@ -1131,7 +1132,7 @@ static int apk_db_read_state(struct apk_database *db, int flags)
 	int r;
 
 	/* Read:
-	 * 1. /etc/apk/world
+	 * 1. /etc/spk/world
 	 * 2. installed packages db
 	 * 3. triggers db
 	 * 4. scripts db
@@ -1324,13 +1325,13 @@ static int apk_db_create(struct apk_database *db)
 	mkdirat(db->root_fd, "dev", 0755);
 	mknodat(db->root_fd, "dev/null", S_IFCHR | 0666, makedev(1, 3));
 	mkdirat(db->root_fd, "etc", 0755);
-	mkdirat(db->root_fd, "etc/apk", 0755);
+	mkdirat(db->root_fd, "etc/spk", 0755);
 	mkdirat(db->root_fd, "lib", 0755);
-	mkdirat(db->root_fd, "lib/apk", 0755);
-	mkdirat(db->root_fd, "lib/apk/db", 0755);
+	mkdirat(db->root_fd, "lib/spk", 0755);
+	mkdirat(db->root_fd, "lib/spk/db", 0755);
 	mkdirat(db->root_fd, "var", 0755);
 	mkdirat(db->root_fd, "var/cache", 0755);
-	mkdirat(db->root_fd, "var/cache/apk", 0755);
+	mkdirat(db->root_fd, "var/cache/spk", 0755);
 	mkdirat(db->root_fd, "var/cache/misc", 0755);
 
 	fd = openat(db->root_fd, apk_world_file, O_CREAT|O_RDWR|O_TRUNC|O_CLOEXEC, 0644);
@@ -1508,7 +1509,7 @@ int apk_db_open(struct apk_database *db, struct apk_db_options *dbopts)
 		r = -1;
 		goto ret_r;
 	}
-	if (!dbopts->cache_dir) dbopts->cache_dir = "etc/apk/cache";
+	if (!dbopts->cache_dir) dbopts->cache_dir = "etc/spk/cache";
 
 	apk_db_setup_repositories(db, dbopts->cache_dir);
 
@@ -1596,10 +1597,10 @@ int apk_db_open(struct apk_database *db, struct apk_db_options *dbopts)
 		}
 	}
 
-	blob = APK_BLOB_STR("+etc\n" "@etc/init.d\n" "!etc/apk\n");
+	blob = APK_BLOB_STR("+etc\n" "@etc/init.d\n" "!etc/spk\n");
 	apk_blob_for_each_segment(blob, "\n", add_protected_path, db);
 
-	apk_dir_foreach_file(openat(db->root_fd, "etc/apk/protected_paths.d", O_RDONLY | O_CLOEXEC),
+	apk_dir_foreach_file(openat(db->root_fd, "etc/spk/protected_paths.d", O_RDONLY | O_CLOEXEC),
 			     add_protected_paths_from_file, db);
 
 	/* figure out where to have the cache */
@@ -1629,7 +1630,7 @@ int apk_db_open(struct apk_database *db, struct apk_db_options *dbopts)
 	}
 
 	db->keys_fd = openat(db->root_fd,
-			     dbopts->keys_dir ?: "etc/apk/keys",
+			     dbopts->keys_dir ?: "etc/spk/keys",
 			     O_RDONLY | O_CLOEXEC);
 
 	if (apk_flags & APK_OVERLAY_FROM_STDIN) {
@@ -1667,8 +1668,8 @@ int apk_db_open(struct apk_database *db, struct apk_db_options *dbopts)
 			apk_db_add_repository(db, APK_BLOB_STR(repo->url));
 
 		if (dbopts->repositories_file == NULL) {
-			add_repos_from_file(db, db->root_fd, "etc/apk/repositories");
-			apk_dir_foreach_file(openat(db->root_fd, "etc/apk/repositories.d", O_RDONLY | O_CLOEXEC),
+			add_repos_from_file(db, db->root_fd, "etc/spk/repositories");
+			apk_dir_foreach_file(openat(db->root_fd, "etc/spk/repositories.d", O_RDONLY | O_CLOEXEC),
 					     add_repos_from_file, db);
 		} else {
 			add_repos_from_file(db, db->root_fd, dbopts->repositories_file);
@@ -1905,7 +1906,7 @@ int apk_db_run_script(struct apk_database *db, char *fn, char **argv)
 	int status;
 	pid_t pid;
 	static char * const environment[] = {
-		"PATH=/usr/sbin:/usr/bin:/sbin:/bin",
+		"PATH=/System/S2/bin:/usr/sbin:/usr/bin:/sbin:/bin",
 		NULL
 	};
 
@@ -2146,7 +2147,7 @@ static int load_apkindex(void *sctx, const struct apk_file_info *fi,
 
 	if (strcmp(fi->name, "DESCRIPTION") == 0) {
 		repo->description = apk_blob_from_istream(is, fi->size);
-	} else if (strcmp(fi->name, "APKINDEX") == 0) {
+	} else if (strcmp(fi->name, "SPKINDEX") == 0) {
 		ctx->found = 1;
 		bs = apk_bstream_from_istream(is);
 		if (!IS_ERR_OR_NULL(bs)) {
@@ -2481,7 +2482,7 @@ static int apk_db_install_archive_entry(void *_ctx,
 
 		/* Extract the file as name.apk-new */
 		file->acl = apk_db_acl_atomize(ae->mode, ae->uid, ae->gid, &ae->xattr_csum);
-		r = apk_archive_entry_extract(db->root_fd, ae, ".apk-new", is,
+		r = apk_archive_entry_extract(db->root_fd, ae, ".spk-new", is,
 					      extract_cb, ctx);
 
 		switch (r) {
@@ -2607,7 +2608,7 @@ static void apk_db_migrate_files(struct apk_database *db,
 		hlist_for_each_entry_safe(file, fc, fn, &diri->owned_files, diri_files_list) {
 			snprintf(name, sizeof(name), DIR_FILE_FMT,
 				 DIR_FILE_PRINTF(diri->dir, file));
-			snprintf(tmpname, sizeof(tmpname), DIR_FILE_FMT ".apk-new",
+			snprintf(tmpname, sizeof(tmpname), DIR_FILE_FMT ".spk-new",
 				 DIR_FILE_PRINTF(diri->dir, file));
 
 			key = (struct apk_db_file_hash_key) {
@@ -2806,7 +2807,7 @@ int apk_db_install_pkg(struct apk_database *db, struct apk_package *oldpkg,
 				      cb, cb_ctx, script_args);
 		if (r != 0) {
 			if (oldpkg != newpkg)
-				apk_db_purge_pkg(db, ipkg, ".apk-new");
+				apk_db_purge_pkg(db, ipkg, ".spk-new");
 			apk_pkg_uninstall(db, newpkg);
 			goto ret_r;
 		}

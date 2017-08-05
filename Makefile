@@ -1,10 +1,10 @@
 ##
-# Building apk-tools
+# Building spk-tools
 
 -include config.mk
 
-PACKAGE := apk-tools
-VERSION := 2.7.1
+PACKAGE := spk-tools
+VERSION := 1.0.0
 
 ##
 # Default directories
@@ -12,9 +12,9 @@ VERSION := 2.7.1
 DESTDIR		:=
 SBINDIR		:= /sbin
 LIBDIR		:= /lib
-CONFDIR		:= /etc/apk
+CONFDIR		:= /etc/spk
 MANDIR		:= /usr/share/man
-DOCDIR		:= /usr/share/doc/apk
+DOCDIR		:= /usr/share/doc/spk
 
 export DESTDIR SBINDIR LIBDIR CONFDIR MANDIR DOCDIR
 

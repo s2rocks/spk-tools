@@ -144,7 +144,7 @@ const char *apk_error_str(int error)
 	case ENOMSG:
 		return "archive does not contain expected data";
 	case ENOPKG:
-		return "could not find a repo which provides this package (check repositories file and run 'apk update')";
+		return "could not find a repo which provides this package (check repositories file and run 'spk update')";
 	case ECONNABORTED:
 		return "network connection aborted";
 	case ECONNREFUSED:
@@ -154,7 +154,7 @@ const char *apk_error_str(int error)
 	case ENXIO:
 		return "DNS lookup error";
 	case EREMOTEIO:
-		return "remote server returned error (try 'apk update')";
+		return "remote server returned error (try 'spk update')";
 	case ETIMEDOUT:
 		return "operation timed out";
 	case EAGAIN:
@@ -162,7 +162,7 @@ const char *apk_error_str(int error)
 	case EAPKBADURL:
 		return "invalid URL (check your repositories file)";
 	case EAPKSTALEINDEX:
-		return "package mentioned in index not found (try 'apk update')";
+		return "package mentioned in index not found (try 'spk update')";
 	default:
 		return strerror(error);
 	}

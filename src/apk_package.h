@@ -130,7 +130,7 @@ APK_ARRAY(apk_package_array, struct apk_package *);
 
 #define PKG_VER_FMT		"%s-" BLOB_FMT
 #define PKG_VER_PRINTF(pkg)	pkg->name->name, BLOB_PRINTF(*pkg->version)
-#define PKG_FILE_FMT		PKG_VER_FMT ".apk"
+#define PKG_FILE_FMT		PKG_VER_FMT ".spk"
 #define PKG_FILE_PRINTF(pkg)	PKG_VER_PRINTF(pkg)
 
 extern const char *apk_script_types[];

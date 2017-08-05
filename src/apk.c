@@ -49,7 +49,7 @@ char **apk_argv;
 
 static void version(void)
 {
-	printf("apk-tools " APK_VERSION ", compiled for " APK_DEFAULT_ARCH ".\n"
+	printf("spk-tools " SPK_VERSION ", compiled for " APK_DEFAULT_ARCH ".\n"
 #ifdef TEST_MODE
 		"TEST MODE BUILD. NOT FOR PRODUCTION USE.\n"
 #endif
@@ -262,7 +262,7 @@ static void print_usage(const char *cmd, const char *args, const struct apk_opti
 	char word[128];
 	int g, i, j;
 
-	indent.x = printf("\nusage: apk %s", cmd) - 1;
+	indent.x = printf("\nusage: spk %s", cmd) - 1;
 	for (g = 0; optgroups[g]; g++) {
 		opts = optgroups[g]->options;
 		for (i = 0; i < optgroups[g]->num_options; i++) {
@@ -326,7 +326,7 @@ static int usage(struct apk_applet *applet)
 		print_options(optgroups[i]->num_options, optgroups[i]->options);
 	}
 
-	printf("\nThis apk has coffee making abilities.\n");
+	printf("\nThis spk has coffee making abilities.\n");
 
 	return 1;
 }
@@ -534,7 +534,7 @@ int main(int argc, char **argv)
 #endif
 	r = apk_db_open(&db, &dbopts);
 	if (r != 0) {
-		apk_error("Failed to open apk database: %s",
+		apk_error("Failed to open spk database: %s",
 			  apk_error_str(r));
 		goto err;
 	}

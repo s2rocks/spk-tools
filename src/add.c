@@ -116,7 +116,7 @@ static int add_main(void *ctx, struct apk_database *db, struct apk_string_array 
 	foreach_array_item(parg, args) {
 		struct apk_dependency dep;
 
-		if (strstr(*parg, ".apk") != NULL) {
+		if (strstr(*parg, ".spk") != NULL) {
 			struct apk_package *pkg = NULL;
 			struct apk_sign_ctx sctx;
 

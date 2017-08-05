@@ -235,7 +235,7 @@ static int run_commit_hook(void *ctx, int dirfd, const char *file)
 	if ((apk_flags & (APK_NO_SCRIPTS | APK_SIMULATE)) != 0)
 		return 0;
 
-	snprintf(fn, sizeof(fn), "etc/apk/commit_hooks.d" "/%s", file);
+	snprintf(fn, sizeof(fn), "etc/spk/commit_hooks.d" "/%s", file);
 	if (apk_verbosity >= 2) apk_message("Executing: %s %s", fn, commit_hook_str[hook->type]);
 
 	if (apk_db_run_script(db, fn, argv) < 0 && hook->type == PRE_COMMIT_HOOK)
@@ -247,7 +247,7 @@ static int run_commit_hook(void *ctx, int dirfd, const char *file)
 static int run_commit_hooks(struct apk_database *db, int type)
 {
 	struct apk_commit_hook hook = { .db = db, .type = type };
-	return apk_dir_foreach_file(openat(db->root_fd, "etc/apk/commit_hooks.d", O_RDONLY | O_CLOEXEC),
+	return apk_dir_foreach_file(openat(db->root_fd, "etc/spk/commit_hooks.d", O_RDONLY | O_CLOEXEC),
 				    run_commit_hook, &hook);
 }
 

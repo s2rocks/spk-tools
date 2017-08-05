@@ -47,7 +47,7 @@ static int cache_download(struct apk_database *db)
 
 	r = apk_solver_solve(db, 0, db->world, &changeset);
 	if (r < 0) {
-		apk_error("Unable to select packages. Run apk fix.");
+		apk_error("Unable to select packages. Run spk fix.");
 		return r;
 	}
 

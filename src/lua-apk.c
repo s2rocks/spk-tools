@@ -302,7 +302,7 @@ LUALIB_API int luaopen_apk(lua_State *L)
 	lua_setglobal(L, LIBNAME);
 
 	lua_pushliteral(L, "version");
-	lua_pushliteral(L, APK_VERSION);
+	lua_pushliteral(L, SPK_VERSION);
 	lua_settable(L, -3);
 
 	return 1;

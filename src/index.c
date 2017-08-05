@@ -155,7 +155,7 @@ static int index_main(void *ctx, struct apk_database *db, struct apk_string_arra
 				fname = *parg;
 			else
 				fname++;
-			fend = strstr(fname, ".apk");
+			fend = strstr(fname, ".spk");
 			if (fend == NULL)
 				break;
 			if (apk_pkg_parse_name(APK_BLOB_PTR_PTR(fname, fend-1),
@@ -212,7 +212,7 @@ static int index_main(void *ctx, struct apk_database *db, struct apk_string_arra
 
 		memset(&fi, 0, sizeof(fi));
 		fi.mode = 0644 | S_IFREG;
-		fi.name = "APKINDEX";
+		fi.name = "SPKINDEX";
 		counter = apk_ostream_counter(&fi.size);
 		r = apk_db_index_write(db, counter);
 		apk_ostream_close(counter);

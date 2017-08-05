@@ -57,7 +57,7 @@ static const struct apk_option options_applet[] = {
 	  "Select latest version of package (if it is not pinned), and "
 	  "print error if it cannot be installed due to other dependencies" },
 	{ 0x10000, "no-self-upgrade",
-	  "Do not do early upgrade of 'apk-tools' package" },
+	  "Do not do early upgrade of 'spk-tools' package" },
 	{ 0x10001, "self-upgrade-only", "Only do self-upgrade" },
 };
 
@@ -76,7 +76,7 @@ int apk_do_self_upgrade(struct apk_database *db, unsigned short solver_flags, un
 	struct apk_changeset changeset = {};
 	int r;
 
-	name = apk_db_get_name(db, APK_BLOB_STR("apk-tools"));
+	name = apk_db_get_name(db, APK_BLOB_STR("spk-tools"));
 
 	/* First check if new version is even available */
 	r = 0;
@@ -110,23 +110,23 @@ int apk_do_self_upgrade(struct apk_database *db, unsigned short solver_flags, un
 		goto ret;
 
 	if (!self_upgrade_only && apk_flags & APK_SIMULATE) {
-		apk_warning("This simulation is not reliable as apk-tools upgrade is available.");
+		apk_warning("This simulation is not reliable as spk-tools upgrade is available.");
 		goto ret;
 	}
 
-	apk_message("Upgrading critical system libraries and apk-tools:");
+	apk_message("Upgrading critical system libraries and spk-tools:");
 	apk_solver_commit_changeset(db, &changeset, db->world);
 	if (self_upgrade_only) goto ret;
 
 	apk_db_close(db);
 
-	apk_message("Continuing the upgrade transaction with new apk-tools:");
+	apk_message("Continuing the upgrade transaction with new spk-tools:");
 	for (r = 0; apk_argv[r] != NULL; r++)
 		;
 	apk_argv[r] = "--no-self-upgrade";
 	execvp(apk_argv[0], apk_argv);
 
-	apk_error("PANIC! Failed to re-execute new apk-tools!");
+	apk_error("PANIC! Failed to re-execute new spk-tools!");
 	exit(1);
 
 ret:

@@ -260,7 +260,7 @@ recurse_check:
 			goto done;
 		if (actx->mode == MODE_BACKUP &&
 		    reason == 'A' &&
-		    apk_blob_ends_with(bent, APK_BLOB_STR(".apk-new")))
+		    apk_blob_ends_with(bent, APK_BLOB_STR(".spk-new")))
 			goto done;
 		report_audit(actx, reason, bfull, dbf ? dbf->diri->pkg : NULL);
 	}

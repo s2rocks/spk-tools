@@ -94,7 +94,7 @@ static const struct apk_option options_applet[] = {
 	{ 'L', "link",		"Create hard links if possible" },
 	{ 'R', "recursive",	"Fetch the PACKAGE and all its dependencies" },
 	{ 0x104, "simulate",	"Show what would be done without actually doing it" },
-	{ 's', "stdout",	"Dump the .apk to stdout (incompatible "
+	{ 's', "stdout",	"Dump the .spk to stdout (incompatible "
 				"with -o, -R, --progress)" },
 	{ 'o', "output",	"Directory to place the PACKAGEs to",
 	  required_argument, "DIR" },
